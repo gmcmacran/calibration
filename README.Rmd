@@ -1,0 +1,368 @@
+---
+output: github_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+library(tidyverse, warn.conflicts = FALSE)
+options(dplyr.summarise.inform = FALSE)
+```
+
+# Repo Overview
+
+For likelihood ratio tests, exact sampling distributions are unknown for most probability density functions. Instead, p value calculations rely on the asymptotic $\chi^2$ approximation. This repo explores the calibration of p values when sample size is small. The goal is to identify a sample size such that the approximation becomes good enough.
+
+# Calibration Overview
+
+Definitions:
+
+-   Theoretical p value - p value based on asymptotic $\chi^2$ approximation.
+-   Empirical p value - proportion of p values as extreme or more extreme than the theoretical p value.
+
+If the $\chi^2$ approximation is exact, the theoretical p value will match the empirical p value exactly. Visually, all dots fall on the read line.
+
+```{r exampleCalib, echo=FALSE, message=FALSE}
+set.seed(1)
+
+example_df <- tibble(pvalue = runif(100)) %>%
+  mutate(emperical_pvalue = pvalue)
+
+ggplot(example_df, aes(x = pvalue, emperical_pvalue)) +
+  geom_point(alpha = 0.3) +
+  stat_function(fun = identity, color = "darkred") +
+  scale_x_continuous(breaks = seq(0, 1, .1)) +
+  scale_y_continuous(breaks = seq(0, 1, .1)) +
+  labs(x = "Theoretical P Value", y = "Empirical P Value")
+```
+
+If the $\chi^2$ approximation is completely inaccurate, there is no correlation between the two p value calculations.
+
+```{r exampleCalibTwo, echo=FALSE, message=FALSE}
+set.seed(1)
+
+example_df <- tibble(pvalue = runif(100)) %>%
+  mutate(emperical_pvalue = runif(100))
+
+ggplot(example_df, aes(x = pvalue, emperical_pvalue)) +
+  geom_point(alpha = 0.3) +
+  stat_function(fun = identity, color = "darkred") +
+  scale_x_continuous(breaks = seq(0, 1, .1)) +
+  scale_y_continuous(breaks = seq(0, 1, .1)) +
+  labs(x = "Theoretical P Value", y = "Empirical P Value")
+```
+
+# Simulation Process
+
+For each test:
+
+-   Generate data from distribution.
+-   Call hypothesis testing function and get theoretical p value.
+-   Compare each iteration's theoretical p value to all other theoretical p values to calculate an empirical p value.
+
+N is increased and the process is repeated until calibration is good between the two p values.
+
+# One Sample Calibration
+
+```{r oneCalib, echo=FALSE, message=FALSE}
+gaussian <- bind_rows(
+  readRDS("results/gaussian_type_one.rds"),
+  readRDS("results/gaussian_type_one_exact.rds")
+)
+gaussian <- gaussian %>%
+  filter(test %in% c("gaussian_mu_one_sample")) %>%
+  select(test, alt, param = mu, pvalue) %>%
+  bind_rows(gaussian %>%
+    filter(test %in% c("gaussian_variance_one_sample")) %>%
+    select(test, alt, param = variance, pvalue))
+
+gamma <- bind_rows(
+  readRDS("results/gamma_type_one_rate.rds"),
+  readRDS("results/gamma_type_one_scale.rds"),
+  readRDS("results/gamma_type_one_shape.rds")
+)
+gamma <- gamma %>%
+  filter(test %in% c("gamma_rate_one_sample")) %>%
+  select(test, alt, param = rate, pvalue) %>%
+  bind_rows(
+    gamma %>%
+      filter(test %in% c("gamma_scale_one_sample")) %>%
+      select(test, alt, param = scale, pvalue),
+    gamma %>%
+      filter(test %in% c("gamma_shape_one_sample")) %>%
+      select(test, alt, param = shape, pvalue)
+  )
+
+poisson <- readRDS("results/poisson_type_one.rds")
+poisson <- poisson %>%
+  select(test, alt, param = lambda, pvalue)
+
+
+beta <- bind_rows(
+  readRDS("results/beta_type_one_shape1.rds"),
+  readRDS("results/beta_type_one_shape2.rds")
+)
+beta <- beta %>%
+  filter(test %in% c("beta_shape1_one_sample")) %>%
+  select(test, alt, param = shape1, pvalue) %>%
+  bind_rows(beta %>%
+    filter(test %in% c("beta_shape2_one_sample")) %>%
+    select(test, alt, param = shape2, pvalue))
+
+neg_binom <- bind_rows(
+  readRDS("results/negative_binomial_type_one.rds")
+)
+neg_binom <- neg_binom %>%
+  select(test, alt, param = p, pvalue)
+
+expon <- readRDS("results/exponential_type_one.rds")
+expon <- expon %>%
+  select(test, alt, param = rate, pvalue)
+
+binom <- bind_rows(
+  readRDS("results/binomail_type_one.rds")
+)
+binom <- binom %>%
+  select(test, alt, param = p, pvalue)
+
+cauchy <- readRDS("results/cauchy_type_one.rds")
+cauchy <- cauchy %>%
+  filter(test == "cauchy_location_one_sample") %>%
+  select(test, alt, param = location, pvalue) %>%
+  bind_rows(cauchy %>%
+    filter(test == "cauchy_scale_one_sample") %>%
+    select(test, alt, param = scale, pvalue))
+
+invGauus <- readRDS("results/inverse_gaussian_type_one.rds")
+invGauus <- invGauus %>%
+  filter(test == "inverse_gaussian_mu_one_sample") %>%
+  select(test, alt, param = mu, pvalue) %>%
+  bind_rows(
+    invGauus %>%
+      filter(test == "inverse_gaussian_shape_one_sample") %>%
+      select(test, alt, param = shape, pvalue),
+    invGauus %>%
+      filter(test == "inverse_gaussian_dispersion_one_sample") %>%
+      select(test, alt, param = dispersion, pvalue)
+  ) %>%
+  mutate(test = str_replace(test, "inverse_", "inv_")) %>%
+  mutate(test = str_replace(test, "dispersion_", "disp_"))
+
+empLik <- readRDS("results/empirical_mu_type_one.rds")
+empLik <- empLik %>%
+  select(test, alt, param = mu, pvalue)
+
+empLikQuant <- readRDS("results/empirical_quantile_type_one.rds")
+empLikQuant <- empLikQuant %>%
+  select(test, alt, param = value, pvalue)
+
+
+typeI <- bind_rows(
+  gaussian,
+  gamma,
+  poisson,
+  beta,
+  neg_binom,
+  expon,
+  binom,
+  cauchy,
+  invGauus,
+  empLik,
+  empLikQuant
+)
+
+temp <- typeI %>%
+  group_by(test, param, alt) %>%
+  summarize(all_pvalues = list(pvalue))
+
+typeI <- typeI %>%
+  inner_join(y = temp, by = c("test", "param", "alt"))
+
+calc_emperical_pvalue <- function(individual_p_value, p_values) {
+  p_values <- unlist(p_values)
+  out <- mean(individual_p_value >= p_values)
+  return(out)
+}
+
+typeI <- typeI %>%
+  rowwise() %>%
+  mutate(emperical_pvalue = calc_emperical_pvalue(pvalue, all_pvalues)) %>%
+  ungroup()
+```
+
+Ideally, calibration is good across the entire range of theoretical p value. What is critical is calibration at .20 and less. Almost no one sets $\alpha$ above .20 when testing.
+
+For all three alternative hypotheses, dots are near the red line for theoretical p values below .20. Most tests are well calibrated over the entire range of theoretical p values.
+
+```{r oneCalibTwo, echo=FALSE, message=FALSE}
+plot_graph <- function(df, alt_arg) {
+  graph <- df %>%
+    filter(alt == alt_arg) %>%
+    mutate(test = str_replace(test, "_one_sample", "")) %>%
+    ggplot(aes(x = pvalue, emperical_pvalue)) +
+    geom_point(alpha = 0.3, shape = ".") +
+    stat_function(fun = identity, color = "darkred") +
+    scale_x_continuous(breaks = seq(0, 1, .2)) +
+    scale_y_continuous(breaks = seq(0, 1, .2)) +
+    labs(title = str_c("Alternative: ", alt_arg), x = "Theoretical P Value", y = "Empirical P Value") +
+    facet_wrap("~test")
+
+  return(graph)
+}
+plot_graph(typeI, "greater")
+```
+
+```{r oneCalibThree, echo=FALSE, message=FALSE}
+plot_graph(typeI, "less")
+```
+
+```{r oneCalibFour, echo=FALSE, message=FALSE}
+plot_graph(typeI, "two.sided")
+```
+
+```{r oneCalibFive, echo=FALSE, message=FALSE}
+rm(list = ls())
+```
+
+# One Way Calibration
+
+```{r oneWayCalib, echo=FALSE, message=FALSE}
+gaussian <- readRDS("results/gaussian_type_one_one_way.rds")
+gaussian <- gaussian %>%
+  filter(test %in% c("gaussian_mu_one_way")) %>%
+  select(test, alt, param = mu, pvalue) %>%
+  bind_rows(gaussian %>%
+    filter(test %in% c("gaussian_variance_one_way")) %>%
+    select(test, alt, param = variance, pvalue))
+
+gamma <- bind_rows(
+  readRDS("results/gamma_type_one_rate_one_way.rds"),
+  readRDS("results/gamma_type_one_scale_one_way.rds"),
+  readRDS("results/gamma_type_one_shape_one_way.rds")
+)
+gamma <- gamma %>%
+  filter(test %in% c("gamma_rate_one_way")) %>%
+  select(test, alt, param = rate, pvalue) %>%
+  bind_rows(
+    gamma %>%
+      filter(test %in% c("gamma_scale_one_way")) %>%
+      select(test, alt, param = scale, pvalue),
+    gamma %>%
+      filter(test %in% c("gamma_shape_one_way")) %>%
+      select(test, alt, param = shape, pvalue)
+  )
+
+poisson <- readRDS("results/poisson_type_one_one_way.rds")
+poisson <- poisson %>%
+  select(test, alt, param = lambda, pvalue)
+
+beta <- bind_rows(
+  readRDS("results/beta_type_one_one_way_shape1.rds"),
+  readRDS("results/beta_type_one_one_way_shape2.rds")
+)
+
+neg_binom <- readRDS("results/negative_binomial_type_one_one_way.rds")
+neg_binom <- neg_binom %>%
+  select(test, alt, param = p, pvalue)
+
+expon <- readRDS("results/exponential_type_one_one_way.rds")
+expon <- expon %>%
+  select(test, alt, param = rate, pvalue)
+
+binom <- readRDS("results/binomail_type_one_one_way.rds")
+binom <- binom %>%
+  select(test, alt, param = p, pvalue)
+
+cauchy <- readRDS("results/cauchy_type_one_one_way.rds")
+cauchy <- cauchy %>%
+  filter(test == "cauchy_location_one_way") %>%
+  select(test, alt, param = location, pvalue) %>%
+  bind_rows(cauchy %>%
+    filter(test == "cauchy_scale_one_way") %>%
+    select(test, alt, param = scale, pvalue))
+
+invGauus <- readRDS("results/inverse_gaussian_type_one_one_way.rds")
+invGauus <- invGauus %>%
+  filter(test == "inverse_gaussian_mu_one_way") %>%
+  select(test, alt, param = mu, pvalue) %>%
+  bind_rows(
+    invGauus %>%
+      filter(test == "inverse_gaussian_shape_one_way") %>%
+      select(test, alt, param = shape, pvalue),
+    invGauus %>%
+      filter(test == "inverse_gaussian_dispersion_one_way") %>%
+      select(test, alt, param = dispersion, pvalue)
+  ) %>%
+  mutate(test = str_replace(test, "inverse_", "inv_")) %>%
+  mutate(test = str_replace(test, "dispersion_", "disp_"))
+
+empLike <- readRDS("results/empirical_mu_type_one_one_way.rds")
+empLike <- empLike %>%
+  select(test, alt, param = mu, pvalue)
+
+empLikeQuant <- readRDS("results/empirical_quantile_type_one_one_way.rds")
+empLikeQuant <- empLikeQuant %>%
+  select(test, alt, param = Q, pvalue)
+
+
+typeI <- bind_rows(
+  gaussian,
+  gamma,
+  poisson,
+  beta,
+  neg_binom,
+  expon,
+  binom,
+  cauchy,
+  invGauus,
+  empLike,
+  empLikeQuant
+)
+
+temp <- typeI %>%
+  group_by(test, param, alt) %>%
+  summarize(all_pvalues = list(pvalue))
+
+typeI <- typeI %>%
+  inner_join(y = temp, by = c("test", "param", "alt"))
+
+calc_emperical_pvalue <- function(individual_p_value, p_values) {
+  p_values <- unlist(p_values)
+  out <- mean(individual_p_value >= p_values)
+  return(out)
+}
+
+typeI <- typeI %>%
+  rowwise() %>%
+  mutate(emperical_pvalue = calc_emperical_pvalue(pvalue, all_pvalues)) %>%
+  ungroup()
+```
+
+For one way tests, calibration is great for most tests. The empirical quantile test has the worst calibration.
+
+```{r oneWayCalibTwo, echo=FALSE, message=FALSE}
+plot_graph <- function(df, alt_arg) {
+  graph <- df %>%
+    filter(alt == alt_arg) %>%
+    mutate(test = str_replace(test, "_one_way", "")) %>%
+    ggplot(aes(x = pvalue, emperical_pvalue)) +
+    geom_point(alpha = 0.3, shape = ".") +
+    stat_function(fun = identity, color = "darkred") +
+    scale_x_continuous(breaks = seq(0, 1, .2)) +
+    scale_y_continuous(breaks = seq(0, 1, .2)) +
+    labs(title = str_c("Alternative: ", alt_arg), x = "Theoretical P Value", y = "Empirical P Value") +
+    facet_wrap("~test")
+
+  return(graph)
+}
+
+plot_graph(typeI, "two.sided")
+```
+
+```{r oneWayCalibThree, echo=FALSE, message=FALSE}
+rm(list = ls())
+```
