@@ -28,7 +28,7 @@ for (location in locations) {
       x <- rcauchy(N_loc, location, scale)
       fctr <- factor(c(rep("1", N_loc / 2), rep("2", N_loc / 2)), levels = c("1", "2"))
       test <- cauchy_location_one_way(x, fctr)
-      
+
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative
@@ -36,7 +36,7 @@ for (location in locations) {
     temp <- tibble(test = testName, location = location, scale = scale, stat = stats, pvalue = pvalues, alt = alts)
     sim_results <- sim_results %>% bind_rows(temp)
     rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
-    
+
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)
@@ -46,7 +46,7 @@ for (location in locations) {
       x <- rcauchy(N_scale, location, scale)
       fctr <- factor(c(rep("1", N_scale / 2), rep("2", N_scale / 2)), levels = c("1", "2"))
       test <- cauchy_scale_one_way(x, fctr)
-      
+
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative

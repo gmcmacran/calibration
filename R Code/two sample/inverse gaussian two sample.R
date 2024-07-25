@@ -42,7 +42,7 @@ for (mu in mus) {
 for (mu in mus) {
   for (shape in shapes) {
     dispersion <- 1 / shape
-    
+
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)
@@ -66,7 +66,7 @@ dispersions <- seq(1, 9, 2)
 for (mu in mus) {
   for (dispersion in dispersions) {
     shape <- 1 / dispersion
-    
+
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)

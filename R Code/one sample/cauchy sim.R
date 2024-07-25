@@ -40,7 +40,7 @@ for (location in locations) {
       sim_results <- sim_results %>% bind_rows(temp)
       rm(stats, pvalues, alts, testName, temp, i)
     }
-    
+
     for (alt in c("two.sided", "less", "greater")) {
       stats <- vector(mode = "numeric", length = B)
       pvalues <- vector(mode = "numeric", length = B)

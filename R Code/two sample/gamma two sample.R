@@ -19,7 +19,7 @@ sim_results <- tibble()
 for (shape in shapes) {
   for (rate in rates) {
     scale <- 1 / rate
-    
+
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)
@@ -46,7 +46,7 @@ sim_results <- tibble()
 for (shape in shapes) {
   for (rate in rates) {
     scale <- 1 / rate
-    
+
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)
@@ -72,7 +72,7 @@ sim_results <- tibble()
 for (shape in shapes) {
   for (rate in rates) {
     scale <- 1 / rate
-    
+
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)

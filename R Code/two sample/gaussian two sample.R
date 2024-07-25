@@ -35,7 +35,7 @@ for (mu in mus) {
     temp <- tibble(test = testName, mu = mu, variance = variance, stat = stats, pvalue = pvalues, alt = alts)
     sim_results <- sim_results %>% bind_rows(temp)
     rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
-    
+
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)
