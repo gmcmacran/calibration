@@ -7,7 +7,7 @@ library(statmod)
 # Simulation settings
 ################
 compiler::enableJIT(3)
-B <- 10
+B <- 5000
 N <- 35 # 35
 
 ################
