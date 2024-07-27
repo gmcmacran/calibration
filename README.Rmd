@@ -21,10 +21,10 @@ For likelihood ratio tests, exact sampling distributions are unknown for most pr
 
 Definitions:
 
--   Theoretical p value - p value based on asymptotic $\chi^2$ approximation.
--   Empirical p value - proportion of p values as extreme or more extreme than the theoretical p value.
+-   Asymptotic p value - p value based on the asymptotic $\chi^2$ approximation.
+-   Empirical p value - proportion of p values as extreme or more extreme than the asymptotic p value.
 
-If the $\chi^2$ approximation is exact, the theoretical p value will match the empirical p value exactly. Visually, all dots fall on the read line.
+If the $\chi^2$ approximation is exact, the asymptotic p value will match the empirical p value exactly. Visually, all dots fall on the red line.
 
 ```{r exampleCalib, echo=FALSE, message=FALSE}
 set.seed(1)
@@ -37,7 +37,7 @@ ggplot(example_df, aes(x = pvalue, emperical_pvalue)) +
   stat_function(fun = identity, color = "darkred") +
   scale_x_continuous(breaks = seq(0, 1, .1)) +
   scale_y_continuous(breaks = seq(0, 1, .1)) +
-  labs(x = "Theoretical P Value", y = "Empirical P Value")
+  labs(x = "Asymptotic P Value", y = "Empirical P Value")
 ```
 
 If the $\chi^2$ approximation is completely inaccurate, there is no correlation between the two p value calculations.
@@ -53,7 +53,7 @@ ggplot(example_df, aes(x = pvalue, emperical_pvalue)) +
   stat_function(fun = identity, color = "darkred") +
   scale_x_continuous(breaks = seq(0, 1, .1)) +
   scale_y_continuous(breaks = seq(0, 1, .1)) +
-  labs(x = "Theoretical P Value", y = "Empirical P Value")
+  labs(x = "Asymptotic P Value", y = "Empirical P Value")
 ```
 
 # Simulation Process
@@ -61,10 +61,10 @@ ggplot(example_df, aes(x = pvalue, emperical_pvalue)) +
 For each test:
 
 -   Generate data from distribution.
--   Call hypothesis testing function and get theoretical p value.
--   Compare each iteration's theoretical p value to all other theoretical p values to calculate an empirical p value.
+-   Call hypothesis testing function and get asymptotic p value.
+-   Compare each iteration's asymptotic p value to all other asymptotic p values to calculate an empirical p value.
 
-N is increased and the process is repeated until calibration is good between the two p values.
+Sample size is increased and the process is repeated until calibration is good between the two p values.
 
 # One Sample Calibration
 
@@ -194,21 +194,25 @@ typeI <- typeI %>%
   ungroup()
 ```
 
-Ideally, calibration is good across the entire range of theoretical p value. What is critical is calibration at .20 and less. Almost no one sets $\alpha$ above .20 when testing.
+Ideally, calibration is good across the entire range of asymptotic p value. What is critical is calibration at .20 and less. Almost no one sets $\alpha$ above .20 when testing.
 
-For all three alternative hypotheses, dots are near the red line for theoretical p values below .20. Most tests are well calibrated over the entire range of theoretical p values.
+For all three alternative hypotheses, dots are near the red line for asymptotic p values below .20. Most tests are well calibrated over the entire range of asymptotic p values.
 
 ```{r oneCalibTwo, echo=FALSE, message=FALSE}
 plot_graph <- function(df, alt_arg) {
+  drop_leading_zero <- function(l) {
+    str_replace(l, "0(?=.)", "")
+  }
+
   graph <- df %>%
     filter(alt == alt_arg) %>%
     mutate(test = str_replace(test, "_one_sample", "")) %>%
     ggplot(aes(x = pvalue, emperical_pvalue)) +
     geom_point(alpha = 0.3, shape = ".") +
     stat_function(fun = identity, color = "darkred") +
-    scale_x_continuous(breaks = seq(0, 1, .2)) +
-    scale_y_continuous(breaks = seq(0, 1, .2)) +
-    labs(title = str_c("Alternative: ", alt_arg), x = "Theoretical P Value", y = "Empirical P Value") +
+    scale_x_continuous(breaks = seq(0, 1, .2), labels = drop_leading_zero) +
+    scale_y_continuous(breaks = seq(0, 1, .2), labels = drop_leading_zero) +
+    labs(title = str_c("Alternative: ", alt_arg), x = "Asymptotic P Value", y = "Empirical P Value") +
     facet_wrap("~test")
 
   return(graph)
@@ -346,15 +350,19 @@ For one way tests, calibration is great for most tests. The empirical quantile t
 
 ```{r oneWayCalibTwo, echo=FALSE, message=FALSE}
 plot_graph <- function(df, alt_arg) {
+  drop_leading_zero <- function(l) {
+    str_replace(l, "0(?=.)", "")
+  }
+
   graph <- df %>%
     filter(alt == alt_arg) %>%
     mutate(test = str_replace(test, "_one_way", "")) %>%
     ggplot(aes(x = pvalue, emperical_pvalue)) +
     geom_point(alpha = 0.3, shape = ".") +
     stat_function(fun = identity, color = "darkred") +
-    scale_x_continuous(breaks = seq(0, 1, .2)) +
-    scale_y_continuous(breaks = seq(0, 1, .2)) +
-    labs(title = str_c("Alternative: ", alt_arg), x = "Theoretical P Value", y = "Empirical P Value") +
+    scale_x_continuous(breaks = seq(0, 1, .2), labels = drop_leading_zero) +
+    scale_y_continuous(breaks = seq(0, 1, .2), labels = drop_leading_zero) +
+    labs(title = str_c("Alternative: ", alt_arg), x = "Asymptotic P Value", y = "Empirical P Value") +
     facet_wrap("~test")
 
   return(graph)
