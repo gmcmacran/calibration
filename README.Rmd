@@ -137,7 +137,12 @@ cauchy <- cauchy %>%
     filter(test == "cauchy_scale_one_sample") %>%
     select(test, alt, param = scale, pvalue))
 
-invGauus <- readRDS("results/inverse_gaussian_type_one.rds")
+invGauus <- bind_rows(
+  readRDS("results/inverse_gaussian_type_one_mu.rds"),
+  readRDS("results/inverse_gaussian_type_one_shape.rds"),
+  readRDS("results/inverse_gaussian_type_one_dispersion.rds")
+)
+
 invGauus <- invGauus %>%
   filter(test == "inverse_gaussian_mu_one_sample") %>%
   select(test, alt, param = mu, pvalue) %>%

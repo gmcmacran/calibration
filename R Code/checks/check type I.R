@@ -1,4 +1,7 @@
-# Uncomment beta files
+# Rerun gamma parameter by parameter.
+# Rerun inverse gaussian parameter by parameter.
+# Fix sim checks in other sim repo for beta distribution.
+# Add addtional test for fctr in one way tests.
 
 library(LRTesteR)
 library(tidyverse)
@@ -30,7 +33,9 @@ fns <- c(
   "exponential_type_one.rds",
   "binomail_type_one.rds",
   "cauchy_type_one.rds",
-  "inverse_gaussian_type_one.rds",
+  "inverse_gaussian_type_one_mu.rds",
+  "inverse_gaussian_type_one_shape.rds",
+  "inverse_gaussian_type_one_dispersion.rds",
   "empirical_mu_type_one.rds",
   "empirical_quantile_type_one.rds"
 )
