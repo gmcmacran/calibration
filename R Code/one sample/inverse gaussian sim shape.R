@@ -8,7 +8,7 @@ library(statmod)
 ################
 compiler::enableJIT(3)
 B <- 5000
-N <- 10 # 35
+N <- 35 # 35
 
 ################
 # Type I
