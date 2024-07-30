@@ -1,8 +1,3 @@
-# Rerun gamma parameter by parameter.
-# Rerun inverse gaussian parameter by parameter.
-# Fix sim checks in other sim repo for beta distribution.
-# Add addtional test for fctr in one way tests.
-
 library(LRTesteR)
 library(tidyverse)
 
