@@ -7,7 +7,7 @@ library(stringr)
 ################
 compiler::enableJIT(3)
 B <- 5000
-N <- 40
+N <- 80
 # options(warn=2, error=recover)
 
 ################
