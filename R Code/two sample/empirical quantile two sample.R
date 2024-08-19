@@ -23,6 +23,12 @@ for (Q in Qs) {
     set.seed(i)
     x <- rnorm(n = N, mean = 0, sd = 1)
     fctr <- factor(c(rep("1", N / 2), rep("2", N / 2)), levels = c("1", "2"))
+    while (
+      (any(as.vector(by(x, fctr, min)) >= as.numeric(stats::quantile(x, Q)))) |
+        (any(as.vector(by(x, fctr, max)) <= as.numeric(stats::quantile(x, Q))))
+    ) {
+      x <- rnorm(n = N, mean = 0, sd = 1)
+    }
     test <- empirical_quantile_one_way(x, Q, fctr)
     stats[i] <- test$statistic
     pvalues[i] <- test$p.value
