@@ -6,7 +6,7 @@ library(tidyverse)
 ################
 compiler::enableJIT(3)
 B <- 5000
-N <- 50 #
+N <- 50 # 50
 
 ################
 # Type I
