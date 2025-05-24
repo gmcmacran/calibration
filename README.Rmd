@@ -80,6 +80,14 @@ gaussian <- gaussian %>%
     filter(test %in% c("gaussian_variance_one_sample")) %>%
     select(test, alt, param = variance, pvalue))
 
+log_normal <- readRDS("results/log_normal_type_one.rds")
+log_normal <- log_normal %>%
+  filter(test %in% c("log_normal_mu_one_sample")) %>%
+  select(test, alt, param = mu, pvalue) %>%
+  bind_rows(log_normal %>%
+    filter(test %in% c("log_normal_variance_one_sample")) %>%
+    select(test, alt, param = variance, pvalue))
+
 gamma <- bind_rows(
   readRDS("results/gamma_type_one_rate.rds"),
   readRDS("results/gamma_type_one_scale.rds"),
@@ -168,6 +176,7 @@ empLikQuant <- empLikQuant %>%
 
 typeI <- bind_rows(
   gaussian,
+  log_normal,
   gamma,
   poisson,
   beta,
@@ -248,6 +257,14 @@ gaussian <- gaussian %>%
     filter(test %in% c("gaussian_variance_one_way")) %>%
     select(test, alt, param = variance, pvalue))
 
+log_normal <- readRDS("results/log_normal_type_one_one_way.rds")
+log_normal <- log_normal %>%
+  filter(test %in% c("log_normal_mu_one_way")) %>%
+  select(test, alt, param = mu, pvalue) %>%
+  bind_rows(log_normal %>%
+    filter(test %in% c("log_normal_variance_one_way")) %>%
+    select(test, alt, param = variance, pvalue))
+
 gamma <- bind_rows(
   readRDS("results/gamma_type_one_rate_one_way.rds"),
   readRDS("results/gamma_type_one_scale_one_way.rds"),
@@ -320,6 +337,7 @@ empLikeQuant <- empLikeQuant %>%
 
 typeI <- bind_rows(
   gaussian,
+  log_normal,
   gamma,
   poisson,
   beta,
