@@ -24,11 +24,11 @@ for (lambda in lambdas) {
     alts <- vector(mode = "character", length = B)
     CI_LBs <- vector(mode = "numeric", length = B)
     CI_UBs <- vector(mode = "numeric", length = B)
-    testName <- "poisson_lambda_one_sample"
+    testName <- "poisson_lambda_test"
     for (i in 1:B) {
       set.seed(i)
       x <- rpois(n = N, lambda = lambda)
-      test <- poisson_lambda_one_sample(x, lambda, alt)
+      test <- poisson_lambda_test(x, lambda, alt)
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative

@@ -18,7 +18,7 @@ for (Q in Qs) {
   stats <- vector(mode = "numeric", length = B)
   pvalues <- vector(mode = "numeric", length = B)
   alts <- vector(mode = "character", length = B)
-  testName <- "empirical_quantile_one_way"
+  testName <- "empirical_quantile_one_way_test"
   for (i in 1:B) {
     set.seed(i)
     x <- rnorm(n = N, mean = 0, sd = 1)
@@ -29,7 +29,7 @@ for (Q in Qs) {
     ) {
       x <- rnorm(n = N, mean = 0, sd = 1)
     }
-    test <- empirical_quantile_one_way(x, Q, fctr)
+    test <- empirical_quantile_one_way_test(x, Q, fctr)
     stats[i] <- test$statistic
     pvalues[i] <- test$p.value
     alts[i] <- test$alternative

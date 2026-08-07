@@ -22,7 +22,7 @@ for (Q in Qs) {
     alts <- vector(mode = "character", length = B)
     CI_LBs <- vector(mode = "numeric", length = B)
     CI_UBs <- vector(mode = "numeric", length = B)
-    testName <- "empirical_quantile_one_sample"
+    testName <- "empirical_quantile_test"
     for (i in 1:B) {
       set.seed(i)
       x <- rnorm(n = N, mean = 0, sd = 1)
@@ -30,7 +30,7 @@ for (Q in Qs) {
       while (value < min(x) | value > max(x)) {
         x <- rnorm(n = N, mean = 0, sd = 1)
       }
-      test <- empirical_quantile_one_sample(x, Q, value, alt)
+      test <- empirical_quantile_test(x, Q, value, alt)
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative

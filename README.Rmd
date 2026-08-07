@@ -74,18 +74,18 @@ gaussian <- bind_rows(
   readRDS("results/gaussian_type_one_exact.rds")
 )
 gaussian <- gaussian %>%
-  filter(test %in% c("gaussian_mu_one_sample")) %>%
+  filter(test %in% c("gaussian_mu_test")) %>%
   select(test, alt, param = mu, pvalue) %>%
   bind_rows(gaussian %>%
-    filter(test %in% c("gaussian_variance_one_sample")) %>%
+    filter(test %in% c("gaussian_variance_test")) %>%
     select(test, alt, param = variance, pvalue))
 
 log_normal <- readRDS("results/log_normal_type_one.rds")
 log_normal <- log_normal %>%
-  filter(test %in% c("log_normal_mu_one_sample")) %>%
+  filter(test %in% c("log_normal_mu_test")) %>%
   select(test, alt, param = mu, pvalue) %>%
   bind_rows(log_normal %>%
-    filter(test %in% c("log_normal_variance_one_sample")) %>%
+    filter(test %in% c("log_normal_variance_test")) %>%
     select(test, alt, param = variance, pvalue))
 
 gamma <- bind_rows(
@@ -94,14 +94,14 @@ gamma <- bind_rows(
   readRDS("results/gamma_type_one_shape.rds")
 )
 gamma <- gamma %>%
-  filter(test %in% c("gamma_rate_one_sample")) %>%
+  filter(test %in% c("gamma_rate_test")) %>%
   select(test, alt, param = rate, pvalue) %>%
   bind_rows(
     gamma %>%
-      filter(test %in% c("gamma_scale_one_sample")) %>%
+      filter(test %in% c("gamma_scale_test")) %>%
       select(test, alt, param = scale, pvalue),
     gamma %>%
-      filter(test %in% c("gamma_shape_one_sample")) %>%
+      filter(test %in% c("gamma_shape_test")) %>%
       select(test, alt, param = shape, pvalue)
   )
 
@@ -115,10 +115,10 @@ beta <- bind_rows(
   readRDS("results/beta_type_one_shape2.rds")
 )
 beta <- beta %>%
-  filter(test %in% c("beta_shape1_one_sample")) %>%
+  filter(test %in% c("beta_shape1_test")) %>%
   select(test, alt, param = shape1, pvalue) %>%
   bind_rows(beta %>%
-    filter(test %in% c("beta_shape2_one_sample")) %>%
+    filter(test %in% c("beta_shape2_test")) %>%
     select(test, alt, param = shape2, pvalue))
 
 neg_binom <- bind_rows(
@@ -139,10 +139,10 @@ binom <- binom %>%
 
 cauchy <- readRDS("results/cauchy_type_one.rds")
 cauchy <- cauchy %>%
-  filter(test == "cauchy_location_one_sample") %>%
+  filter(test == "cauchy_location_test") %>%
   select(test, alt, param = location, pvalue) %>%
   bind_rows(cauchy %>%
-    filter(test == "cauchy_scale_one_sample") %>%
+    filter(test == "cauchy_scale_test") %>%
     select(test, alt, param = scale, pvalue))
 
 invGauus <- bind_rows(
@@ -152,14 +152,14 @@ invGauus <- bind_rows(
 )
 
 invGauus <- invGauus %>%
-  filter(test == "inverse_gaussian_mu_one_sample") %>%
+  filter(test == "inverse_gaussian_mu_test") %>%
   select(test, alt, param = mu, pvalue) %>%
   bind_rows(
     invGauus %>%
-      filter(test == "inverse_gaussian_shape_one_sample") %>%
+      filter(test == "inverse_gaussian_shape_test") %>%
       select(test, alt, param = shape, pvalue),
     invGauus %>%
-      filter(test == "inverse_gaussian_dispersion_one_sample") %>%
+      filter(test == "inverse_gaussian_dispersion_test") %>%
       select(test, alt, param = dispersion, pvalue)
   ) %>%
   mutate(test = str_replace(test, "inverse_", "inv_")) %>%
@@ -220,7 +220,7 @@ plot_graph <- function(df, alt_arg) {
 
   graph <- df %>%
     filter(alt == alt_arg) %>%
-    mutate(test = str_replace(test, "_one_sample", "")) %>%
+    mutate(test = str_replace(test, "_test", "")) %>%
     ggplot(aes(x = pvalue, emperical_pvalue)) +
     geom_point(alpha = 0.3, shape = ".") +
     stat_function(fun = identity, color = "darkred") +
@@ -251,18 +251,18 @@ rm(list = ls())
 ```{r oneWayCalib, echo=FALSE, message=FALSE}
 gaussian <- readRDS("results/gaussian_type_one_one_way.rds")
 gaussian <- gaussian %>%
-  filter(test %in% c("gaussian_mu_one_way")) %>%
+  filter(test %in% c("gaussian_mu_one_way_test")) %>%
   select(test, alt, param = mu, pvalue) %>%
   bind_rows(gaussian %>%
-    filter(test %in% c("gaussian_variance_one_way")) %>%
+    filter(test %in% c("gaussian_variance_one_way_test")) %>%
     select(test, alt, param = variance, pvalue))
 
 log_normal <- readRDS("results/log_normal_type_one_one_way.rds")
 log_normal <- log_normal %>%
-  filter(test %in% c("log_normal_mu_one_way")) %>%
+  filter(test %in% c("log_normal_mu_one_way_test")) %>%
   select(test, alt, param = mu, pvalue) %>%
   bind_rows(log_normal %>%
-    filter(test %in% c("log_normal_variance_one_way")) %>%
+    filter(test %in% c("log_normal_variance_one_way_test")) %>%
     select(test, alt, param = variance, pvalue))
 
 gamma <- bind_rows(
@@ -271,14 +271,14 @@ gamma <- bind_rows(
   readRDS("results/gamma_type_one_shape_one_way.rds")
 )
 gamma <- gamma %>%
-  filter(test %in% c("gamma_rate_one_way")) %>%
+  filter(test %in% c("gamma_rate_one_way_test")) %>%
   select(test, alt, param = rate, pvalue) %>%
   bind_rows(
     gamma %>%
-      filter(test %in% c("gamma_scale_one_way")) %>%
+      filter(test %in% c("gamma_scale_one_way_test")) %>%
       select(test, alt, param = scale, pvalue),
     gamma %>%
-      filter(test %in% c("gamma_shape_one_way")) %>%
+      filter(test %in% c("gamma_shape_one_way_test")) %>%
       select(test, alt, param = shape, pvalue)
   )
 
@@ -305,22 +305,22 @@ binom <- binom %>%
 
 cauchy <- readRDS("results/cauchy_type_one_one_way.rds")
 cauchy <- cauchy %>%
-  filter(test == "cauchy_location_one_way") %>%
+  filter(test == "cauchy_location_one_way_test") %>%
   select(test, alt, param = location, pvalue) %>%
   bind_rows(cauchy %>%
-    filter(test == "cauchy_scale_one_way") %>%
+    filter(test == "cauchy_scale_one_way_test") %>%
     select(test, alt, param = scale, pvalue))
 
 invGauus <- readRDS("results/inverse_gaussian_type_one_one_way.rds")
 invGauus <- invGauus %>%
-  filter(test == "inverse_gaussian_mu_one_way") %>%
+  filter(test == "inverse_gaussian_mu_one_way_test") %>%
   select(test, alt, param = mu, pvalue) %>%
   bind_rows(
     invGauus %>%
-      filter(test == "inverse_gaussian_shape_one_way") %>%
+      filter(test == "inverse_gaussian_shape_one_way_test") %>%
       select(test, alt, param = shape, pvalue),
     invGauus %>%
-      filter(test == "inverse_gaussian_dispersion_one_way") %>%
+      filter(test == "inverse_gaussian_dispersion_one_way_test") %>%
       select(test, alt, param = dispersion, pvalue)
   ) %>%
   mutate(test = str_replace(test, "inverse_", "inv_")) %>%
@@ -379,7 +379,7 @@ plot_graph <- function(df, alt_arg) {
 
   graph <- df %>%
     filter(alt == alt_arg) %>%
-    mutate(test = str_replace(test, "_one_way", "")) %>%
+    mutate(test = str_replace(test, "_one_way_test", "")) %>%
     ggplot(aes(x = pvalue, emperical_pvalue)) +
     geom_point(alpha = 0.3, shape = ".") +
     stat_function(fun = identity, color = "darkred") +

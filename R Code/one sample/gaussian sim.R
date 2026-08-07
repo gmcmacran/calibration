@@ -26,11 +26,11 @@ for (mu in mus) {
       alts <- vector(mode = "character", length = B)
       CI_LBs <- vector(mode = "numeric", length = B)
       CI_UBs <- vector(mode = "numeric", length = B)
-      testName <- "gaussian_mu_one_sample"
+      testName <- "gaussian_mu_test"
       for (i in 1:B) {
         set.seed(i)
         x <- rnorm(n = N_mu, mean = mu, sd = variance^.5)
-        test <- gaussian_mu_one_sample(x, mu, alt)
+        test <- gaussian_mu_test(x, mu, alt)
         stats[i] <- test$statistic
         pvalues[i] <- test$p.value
         alts[i] <- test$alternative
@@ -48,11 +48,11 @@ for (mu in mus) {
       alts <- vector(mode = "character", length = B)
       CI_LBs <- vector(mode = "numeric", length = B)
       CI_UBs <- vector(mode = "numeric", length = B)
-      testName <- "gaussian_variance_one_sample"
+      testName <- "gaussian_variance_test"
       for (i in 1:B) {
         set.seed(i)
         x <- rnorm(n = N_var, mean = mu, sd = variance^.5)
-        test <- gaussian_variance_one_sample(x, variance, alt)
+        test <- gaussian_variance_test(x, variance, alt)
         stats[i] <- test$statistic
         pvalues[i] <- test$p.value
         alts[i] <- test$alternative

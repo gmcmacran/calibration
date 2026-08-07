@@ -20,12 +20,12 @@ for (rate in rates) {
   stats <- vector(mode = "numeric", length = B)
   pvalues <- vector(mode = "numeric", length = B)
   alts <- vector(mode = "character", length = B)
-  testName <- "exponential_rate_one_way"
+  testName <- "exponential_rate_one_way_test"
   for (i in 1:B) {
     set.seed(i)
     x <- rexp(n = N, rate = rate)
     fctr <- factor(c(rep("1", N / 2), rep("2", N / 2)), levels = c("1", "2"))
-    test <- exponential_rate_one_way(x, fctr)
+    test <- exponential_rate_one_way_test(x, fctr)
     stats[i] <- test$statistic
     pvalues[i] <- test$p.value
     alts[i] <- test$alternative

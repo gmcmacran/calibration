@@ -54,7 +54,7 @@ typeI %>%
   nrow() == 3
 
 typeI %>%
-  filter(alt == "two.sided", stat < 0, str_detect(test, "_one_sample")) %>%
+  filter(alt == "two.sided", stat < 0, str_detect(test, "_test")) %>%
   distinct(test)
 
 typeI %>%

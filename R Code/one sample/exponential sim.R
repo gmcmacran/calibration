@@ -23,11 +23,11 @@ for (rate in rates) {
     alts <- vector(mode = "character", length = B)
     CI_LBs <- vector(mode = "numeric", length = B)
     CI_UBs <- vector(mode = "numeric", length = B)
-    testName <- "exponential_rate_one_sample"
+    testName <- "exponential_rate_test"
     for (i in 1:B) {
       set.seed(i)
       x <- rexp(n = N, rate = rate)
-      test <- exponential_rate_one_sample(x, rate, alt)
+      test <- exponential_rate_test(x, rate, alt)
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative

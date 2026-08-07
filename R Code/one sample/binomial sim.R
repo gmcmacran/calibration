@@ -25,11 +25,11 @@ for (p in ps) {
     alts <- vector(mode = "character", length = B)
     CI_LBs <- vector(mode = "numeric", length = B)
     CI_UBs <- vector(mode = "numeric", length = B)
-    testName <- "binomial_p_one_sample"
+    testName <- "binomial_p_test"
     for (i in 1:B) {
       set.seed(i)
       x <- rbinom(1, N, p)
-      test <- binomial_p_one_sample(x, N, p, alt)
+      test <- binomial_p_test(x, N, p, alt)
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative

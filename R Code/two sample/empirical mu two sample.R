@@ -19,12 +19,12 @@ for (mu in mus) {
   stats <- vector(mode = "numeric", length = B)
   pvalues <- vector(mode = "numeric", length = B)
   alts <- vector(mode = "character", length = B)
-  testName <- "empirical_mu_one_way"
+  testName <- "empirical_mu_one_way_test"
   for (i in 1:B) {
     set.seed(i)
     x <- rnorm(n = N, mean = mu, sd = variance^.5)
     fctr <- factor(c(rep("1", N / 2), rep("2", N / 2)), levels = c("1", "2"))
-    test <- empirical_mu_one_way(x, fctr)
+    test <- empirical_mu_one_way_test(x, fctr)
     stats[i] <- test$statistic
     pvalues[i] <- test$p.value
     alts[i] <- test$alternative

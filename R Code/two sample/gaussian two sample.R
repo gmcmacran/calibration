@@ -22,12 +22,12 @@ for (mu in mus) {
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)
-    testName <- "gaussian_mu_one_way"
+    testName <- "gaussian_mu_one_way_test"
     for (i in 1:B) {
       set.seed(i)
       x <- rnorm(n = N_mu, mean = mu, sd = variance^.5)
       fctr <- factor(c(rep("1", N_mu / 2), rep("2", N_mu / 2)), levels = c("1", "2"))
-      test <- gaussian_mu_one_way(x, fctr)
+      test <- gaussian_mu_one_way_test(x, fctr)
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative
@@ -39,12 +39,12 @@ for (mu in mus) {
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)
-    testName <- "gaussian_variance_one_way"
+    testName <- "gaussian_variance_one_way_test"
     for (i in 1:B) {
       set.seed(i)
       x <- rnorm(n = N_var, mean = mu, sd = variance^.5)
       fctr <- factor(c(rep("1", N_var / 2), rep("2", N_var / 2)), levels = c("1", "2"))
-      test <- gaussian_variance_one_way(x, fctr)
+      test <- gaussian_variance_one_way_test(x, fctr)
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative
