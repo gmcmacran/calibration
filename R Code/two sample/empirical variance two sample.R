@@ -1,42 +1,38 @@
 library(LRTesteR)
 library(tidyverse)
 library(stringr)
-library(lmtest)
 
 ################
 # Simulation settings
 ################
 compiler::enableJIT(3)
 B <- 5000
-N <- 50 # 50
+N <- 30 # 30
 
 ################
 # Type I
 ################
-ps <- seq(.05, .95, .10)
-
-all(ps < 1)
-all(ps > 0)
+mu <- 0
+variances <- 1
 
 sim_results <- tibble()
-for (p in ps) {
+for (variance in variances) {
   stats <- vector(mode = "numeric", length = B)
   pvalues <- vector(mode = "numeric", length = B)
   alts <- vector(mode = "character", length = B)
-  testName <- "binomial_p_one_way_test"
+  testName <- "empirical_variance_one_way_test"
   for (i in 1:B) {
     set.seed(i)
-    Ns <- rep(N / 2, 2)
-    x <- rbinom(2, Ns, p)
-    fctr <- factor(c(rep("1", length(x) / 2), rep("2", length(x) / 2)), levels = c("1", "2"))
-    test <- binomial_p_one_way_test(x, Ns, fctr)
+    x <- rnorm(n = N, mean = mu, sd = variance^.5)
+    fctr <- factor(c(rep("1", N / 2), rep("2", N / 2)), levels = c("1", "2"))
+    test <- empirical_variance_one_way_test(x, fctr)
     stats[i] <- test$statistic
     pvalues[i] <- test$p.value
     alts[i] <- test$alternative
   }
-  temp <- tibble(test = testName, p = p, stat = stats, pvalue = pvalues, alt = alts)
+  temp <- tibble(test = testName, mu = mu, variance = variance, stat = stats, pvalue = pvalues, alt = alts)
   sim_results <- sim_results |> bind_rows(temp)
-  rm(stats, pvalues, alts, testName, temp, i, fctr, Ns, test, x)
+  rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
 }
 
 # Check structure
@@ -45,8 +41,12 @@ sim_results |>
   nrow() == 1
 
 sim_results |>
-  distinct(p) |>
-  nrow() == length(ps)
+  distinct(variance) |>
+  nrow() == length(variances)
+
+sim_results |>
+  distinct(mu) |>
+  nrow() == 1
 
 sim_results |>
   distinct(alt) |>
@@ -62,6 +62,6 @@ sim_results |>
 
 # save
 sim_results |>
-  saveRDS("results/binomail_type_one_one_way.rds")
+  saveRDS("results/empirical_variance_type_one_one_way.rds")
 
 rm(list = ls())

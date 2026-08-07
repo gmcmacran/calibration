@@ -18,7 +18,7 @@ for (Q in Qs) {
   stats <- vector(mode = "numeric", length = B)
   pvalues <- vector(mode = "numeric", length = B)
   alts <- vector(mode = "character", length = B)
-  testName <- "empirical_quantile_one_way"
+  testName <- "empirical_quantile_one_way_test"
   for (i in 1:B) {
     set.seed(i)
     x <- rnorm(n = N, mean = 0, sd = 1)
@@ -29,39 +29,39 @@ for (Q in Qs) {
     ) {
       x <- rnorm(n = N, mean = 0, sd = 1)
     }
-    test <- empirical_quantile_one_way(x, Q, fctr)
+    test <- empirical_quantile_one_way_test(x, Q, fctr)
     stats[i] <- test$statistic
     pvalues[i] <- test$p.value
     alts[i] <- test$alternative
   }
   temp <- tibble(test = testName, Q = Q, stat = stats, pvalue = pvalues, alt = alts)
-  sim_results <- sim_results %>% bind_rows(temp)
+  sim_results <- sim_results |> bind_rows(temp)
   rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
 }
 
 # Check structure
-sim_results %>%
-  distinct(test) %>%
+sim_results |>
+  distinct(test) |>
   nrow() == 1
 
-sim_results %>%
-  distinct(Q) %>%
+sim_results |>
+  distinct(Q) |>
   nrow() == length(Qs)
 
-sim_results %>%
-  distinct(alt) %>%
+sim_results |>
+  distinct(alt) |>
   nrow() == 1
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   min(na.rm = TRUE) >= 0
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   max(na.rm = TRUE) <= 1
 
 # save
-sim_results %>%
+sim_results |>
   saveRDS("results/empirical_quantile_type_one_one_way.rds")
 
 rm(list = ls())

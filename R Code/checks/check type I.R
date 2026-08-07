@@ -10,7 +10,7 @@ load_df <- function(fn) {
   }
   fn <- str_c("results/", fn, collapse = "")
   DF <- readRDS(fn)
-  DF <- DF %>%
+  DF <- DF |>
     select(test, alt, stat, pvalue, CI_LB, CI_UB)
   return(DF)
 }
@@ -33,42 +33,43 @@ fns <- c(
   "inverse_gaussian_type_one_shape.rds",
   "inverse_gaussian_type_one_dispersion.rds",
   "empirical_mu_type_one.rds",
-  "empirical_quantile_type_one.rds"
+  "empirical_quantile_type_one.rds",
+  "empirical_variance_type_one.rds"
 )
 
 typeI <- map_dfr(fns, load_df)
 
 # Some tests can produce NA in CI when sample size is small.
-typeI %>%
-  select(-CI_LB, -CI_UB) %>%
-  drop_na() %>%
-  nrow() == typeI %>%
+typeI |>
+  select(-CI_LB, -CI_UB) |>
+  drop_na() |>
+  nrow() == typeI |>
   nrow()
 
-typeI %>%
-  distinct(test) %>%
-  nrow() == 22
+typeI |>
+  distinct(test) |>
+  nrow() == 23
 
-typeI %>%
-  distinct(alt) %>%
+typeI |>
+  distinct(alt) |>
   nrow() == 3
 
-typeI %>%
-  filter(alt == "two.sided", stat < 0, str_detect(test, "_one_sample")) %>%
+typeI |>
+  filter(alt == "two.sided", stat < 0, str_detect(test, "_test")) |>
   distinct(test)
 
-typeI %>%
-  filter(alt != "two.sided") %>%
+typeI |>
+  filter(alt != "two.sided") |>
   summarise(minStat = min(stat), maxStat = max(stat))
 
-typeI %>%
-  filter(alt != "two.sided") %>%
-  group_by(test) %>%
-  summarise(minStat = min(stat), maxStat = max(stat)) %>%
-  arrange(test) %>%
+typeI |>
+  filter(alt != "two.sided") |>
+  group_by(test) |>
+  summarise(minStat = min(stat), maxStat = max(stat)) |>
+  arrange(test) |>
   print(n = Inf)
 
-typeI %>%
+typeI |>
   summarise(
     P_LB = all(pvalue >= 0),
     P_UB = all(pvalue <= 1),
@@ -86,7 +87,7 @@ load_df <- function(fn) {
   }
   fn <- str_c("results/", fn, collapse = "")
   DF <- readRDS(fn)
-  DF <- DF %>%
+  DF <- DF |>
     select(test, alt, stat, pvalue)
   return(DF)
 }
@@ -106,28 +107,29 @@ fns <- c(
   "cauchy_type_one_one_way.rds",
   "inverse_gaussian_type_one_one_way.rds",
   "empirical_mu_type_one_one_way.rds",
-  "empirical_quantile_type_one_one_way.rds"
+  "empirical_quantile_type_one_one_way.rds",
+  "empirical_variance_type_one_one_way.rds"
 )
 
 typeI <- map_dfr(fns, load_df)
 
-typeI %>%
-  drop_na() %>%
-  nrow() == typeI %>%
+typeI |>
+  drop_na() |>
+  nrow() == typeI |>
   nrow()
 
-typeI %>%
-  distinct(test) %>%
-  nrow() == 20
+typeI |>
+  distinct(test) |>
+  nrow() == 21
 
-typeI %>%
-  distinct(alt) %>%
+typeI |>
+  distinct(alt) |>
   nrow() == 1
 
-typeI %>%
+typeI |>
   summarise(minStat = min(stat), maxStat = max(stat))
 
-typeI %>%
+typeI |>
   summarise(
     P_LB = all(pvalue >= 0),
     P_UB = all(pvalue <= 1)

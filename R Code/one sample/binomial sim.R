@@ -25,11 +25,11 @@ for (p in ps) {
     alts <- vector(mode = "character", length = B)
     CI_LBs <- vector(mode = "numeric", length = B)
     CI_UBs <- vector(mode = "numeric", length = B)
-    testName <- "binomial_p_one_sample"
+    testName <- "binomial_p_test"
     for (i in 1:B) {
       set.seed(i)
       x <- rbinom(1, N, p)
-      test <- binomial_p_one_sample(x, N, p, alt)
+      test <- binomial_p_test(x, N, p, alt)
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative
@@ -37,36 +37,36 @@ for (p in ps) {
       CI_UBs[i] <- test$conf.int[2]
     }
     temp <- tibble(test = testName, p = p, stat = stats, pvalue = pvalues, alt = alts, CI_LB = CI_LBs, CI_UB = CI_UBs)
-    sim_results <- sim_results %>% bind_rows(temp)
+    sim_results <- sim_results |> bind_rows(temp)
     rm(stats, pvalues, alts, testName, temp, i)
   }
 }
 
 # Check structure
-sim_results %>%
-  distinct(test) %>%
+sim_results |>
+  distinct(test) |>
   nrow() == 1
 
-sim_results %>%
-  distinct(p) %>%
+sim_results |>
+  distinct(p) |>
   nrow() == length(ps)
 
-sim_results %>%
-  distinct(alt) %>%
+sim_results |>
+  distinct(alt) |>
   nrow() == 3
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   min(na.rm = TRUE) >= 0
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   max(na.rm = TRUE) <= 1
 
 all(sim_results$CI_LB < sim_results$CI_UB)
 
 # save
-sim_results %>%
+sim_results |>
   saveRDS("results/binomail_type_one.rds")
 
 # exact test
@@ -90,35 +90,35 @@ for (p in ps) {
       CI_UBs[i] <- test$conf.int[2]
     }
     temp <- tibble(test = testName, p = p, stat = stats, pvalue = pvalues, alt = alts, CI_LB = CI_LBs, CI_UB = CI_UBs)
-    sim_results_02 <- sim_results_02 %>% bind_rows(temp)
+    sim_results_02 <- sim_results_02 |> bind_rows(temp)
     rm(stats, pvalues, alts, testName, temp, i)
   }
 }
 
-sim_results_02 %>%
-  distinct(test) %>%
+sim_results_02 |>
+  distinct(test) |>
   nrow() == 1
 
-sim_results_02 %>%
-  distinct(p) %>%
+sim_results_02 |>
+  distinct(p) |>
   nrow() == length(ps)
 
-sim_results_02 %>%
-  distinct(alt) %>%
+sim_results_02 |>
+  distinct(alt) |>
   nrow() == 3
 
-sim_results_02 %>%
-  pull(pvalue) %>%
+sim_results_02 |>
+  pull(pvalue) |>
   min(na.rm = TRUE) >= 0
 
-sim_results_02 %>%
-  pull(pvalue) %>%
+sim_results_02 |>
+  pull(pvalue) |>
   max(na.rm = TRUE) <= 1
 
 all(sim_results_02$CI_LB < sim_results_02$CI_UB)
 
 # save
-sim_results_02 %>%
+sim_results_02 |>
   saveRDS("results/binomial_type_one_exact.rds")
 
 rm(list = ls())

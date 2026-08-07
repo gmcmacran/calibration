@@ -20,12 +20,12 @@ If the $\chi^2$ approximation is exact, the asymptotic p value will
 match the empirical p value exactly. Visually, all dots fall on the red
 line.
 
-<img src="man/figures/README-exampleCalib-1.png" width="100%" />
+<img src="man/figures/README-exampleCalib-1.png" alt="" width="100%" />
 
 If the $\chi^2$ approximation is completely inaccurate, there is no
 correlation between the two p value calculations.
 
-<img src="man/figures/README-exampleCalibTwo-1.png" width="100%" />
+<img src="man/figures/README-exampleCalibTwo-1.png" alt="" width="100%" />
 
 # Simulation Process
 
@@ -49,15 +49,15 @@ For all three alternative hypotheses, dots are near the red line for
 asymptotic p values below .20. Most tests are well calibrated over the
 entire range of asymptotic p values.
 
-<img src="man/figures/README-oneCalibTwo-1.png" width="100%" />
+<img src="man/figures/README-oneCalibTwo-1.png" alt="" width="100%" />
 
-<img src="man/figures/README-oneCalibThree-1.png" width="100%" />
+<img src="man/figures/README-oneCalibThree-1.png" alt="" width="100%" />
 
-<img src="man/figures/README-oneCalibFour-1.png" width="100%" />
+<img src="man/figures/README-oneCalibFour-1.png" alt="" width="100%" />
 
 # One Way Calibration
 
 For one way tests, calibration is great for most tests. The empirical
 quantile test has the worst calibration.
 
-<img src="man/figures/README-oneWayCalibTwo-1.png" width="100%" />
+<img src="man/figures/README-oneWayCalibTwo-1.png" alt="" width="100%" />
