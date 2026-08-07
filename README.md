@@ -47,7 +47,9 @@ sets $\alpha$ above .20 when testing.
 
 For all three alternative hypotheses, dots are near the red line for
 asymptotic p values below .20. Most tests are well calibrated over the
-entire range of asymptotic p values.
+entire range of asymptotic p values. The empirical variance test is the
+one exception. The two sided test has great calibration for small sample
+sizes. However, calibration is off for the one sided tests.
 
 <img src="man/figures/README-oneCalibTwo-1.png" alt="" width="100%" />
 
