@@ -37,7 +37,7 @@ run_sim <- function(locations) {
         alts[i] <- test$alternative
       }
       temp <- tibble(test = testName, location = location, scale = scale, stat = stats, pvalue = pvalues, alt = alts)
-      sim_results <- sim_results %>% bind_rows(temp)
+      sim_results <- sim_results |> bind_rows(temp)
       rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
 
       stats <- vector(mode = "numeric", length = B)
@@ -55,7 +55,7 @@ run_sim <- function(locations) {
         alts[i] <- test$alternative
       }
       temp <- tibble(test = testName, location = location, scale = scale, stat = stats, pvalue = pvalues, alt = alts)
-      sim_results <- sim_results %>% bind_rows(temp)
+      sim_results <- sim_results |> bind_rows(temp)
       rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
     }
   }
@@ -66,32 +66,32 @@ sim_results <- future_map_dfr(locations, run_sim, .options = furrr_options(seed 
 
 
 # Check structure
-sim_results %>%
-  distinct(test) %>%
+sim_results |>
+  distinct(test) |>
   nrow() == 2
 
-sim_results %>%
-  distinct(location) %>%
+sim_results |>
+  distinct(location) |>
   nrow() == length(locations)
 
-sim_results %>%
-  distinct(scale) %>%
+sim_results |>
+  distinct(scale) |>
   nrow() == length(scales)
 
-sim_results %>%
-  distinct(alt) %>%
+sim_results |>
+  distinct(alt) |>
   nrow() == 1
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   min(na.rm = TRUE) >= 0
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   max(na.rm = TRUE) <= 1
 
 # save
-sim_results %>%
+sim_results |>
   saveRDS("results/cauchy_type_one_one_way.rds")
 
 plan(sequential)

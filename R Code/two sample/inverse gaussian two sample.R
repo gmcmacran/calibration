@@ -38,7 +38,7 @@ run_sim <- function(mus) {
         alts[i] <- test$alternative
       }
       temp <- tibble(test = testName, mu = mu, shape = shape, dispersion = dispersion, stat = stats, pvalue = pvalues, alt = alts)
-      sim_results <- sim_results %>% bind_rows(temp)
+      sim_results <- sim_results |> bind_rows(temp)
       rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
     }
   }
@@ -61,7 +61,7 @@ run_sim <- function(mus) {
         alts[i] <- test$alternative
       }
       temp <- tibble(test = testName, mu = mu, shape = shape, dispersion = dispersion, stat = stats, pvalue = pvalues, alt = alts)
-      sim_results <- sim_results %>% bind_rows(temp)
+      sim_results <- sim_results |> bind_rows(temp)
       rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
     }
   }
@@ -84,7 +84,7 @@ run_sim <- function(mus) {
         alts[i] <- test$alternative
       }
       temp <- tibble(test = testName, mu = mu, shape = shape, dispersion = dispersion, stat = stats, pvalue = pvalues, alt = alts)
-      sim_results <- sim_results %>% bind_rows(temp)
+      sim_results <- sim_results |> bind_rows(temp)
       rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
     }
   }
@@ -94,36 +94,36 @@ run_sim <- function(mus) {
 sim_results <- future_map_dfr(mus, run_sim, .options = furrr_options(seed = TRUE))
 
 # Check structure
-sim_results %>%
-  distinct(test) %>%
+sim_results |>
+  distinct(test) |>
   nrow() == 3
 
-sim_results %>%
-  distinct(mu) %>%
+sim_results |>
+  distinct(mu) |>
   nrow() == length(mus)
 
-sim_results %>%
-  distinct(shape) %>%
+sim_results |>
+  distinct(shape) |>
   nrow() >= length(shapes)
 
-sim_results %>%
-  distinct(dispersion) %>%
+sim_results |>
+  distinct(dispersion) |>
   nrow() >= length(dispersions)
 
-sim_results %>%
-  distinct(alt) %>%
+sim_results |>
+  distinct(alt) |>
   nrow() == 1
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   min(na.rm = TRUE) >= 0
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   max(na.rm = TRUE) <= 1
 
 # save
-sim_results %>%
+sim_results |>
   saveRDS("results/inverse_gaussian_type_one_one_way.rds")
 
 plan(sequential)

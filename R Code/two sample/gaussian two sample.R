@@ -33,7 +33,7 @@ for (mu in mus) {
       alts[i] <- test$alternative
     }
     temp <- tibble(test = testName, mu = mu, variance = variance, stat = stats, pvalue = pvalues, alt = alts)
-    sim_results <- sim_results %>% bind_rows(temp)
+    sim_results <- sim_results |> bind_rows(temp)
     rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
 
     stats <- vector(mode = "numeric", length = B)
@@ -50,38 +50,38 @@ for (mu in mus) {
       alts[i] <- test$alternative
     }
     temp <- tibble(test = testName, mu = mu, variance = variance, stat = stats, pvalue = pvalues, alt = alts)
-    sim_results <- sim_results %>% bind_rows(temp)
+    sim_results <- sim_results |> bind_rows(temp)
     rm(stats, pvalues, alts, testName, temp, i, fctr, x, test)
   }
 }
 
 # Check structure
-sim_results %>%
-  distinct(test) %>%
+sim_results |>
+  distinct(test) |>
   nrow() == 2
 
-sim_results %>%
-  distinct(mu) %>%
+sim_results |>
+  distinct(mu) |>
   nrow() == length(mus)
 
-sim_results %>%
-  distinct(variance) %>%
+sim_results |>
+  distinct(variance) |>
   nrow() == length(variances)
 
-sim_results %>%
-  distinct(alt) %>%
+sim_results |>
+  distinct(alt) |>
   nrow() == 1
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   min(na.rm = TRUE) >= 0
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   max(na.rm = TRUE) <= 1
 
 # save
-sim_results %>%
+sim_results |>
   saveRDS("results/gaussian_type_one_one_way.rds")
 
 rm(list = ls())

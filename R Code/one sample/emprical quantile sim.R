@@ -38,42 +38,42 @@ for (Q in Qs) {
       CI_UBs[i] <- test$conf.int[2]
     }
     temp <- tibble(test = testName, Q = Q, value = value, stat = stats, pvalue = pvalues, alt = alts, CI_LB = CI_LBs, CI_UB = CI_UBs)
-    sim_results <- sim_results %>% bind_rows(temp)
+    sim_results <- sim_results |> bind_rows(temp)
     rm(stats, pvalues, alts, testName, temp, i, test, x, CI_LBs, CI_UBs)
   }
 }
 
 # Check structure
-sim_results %>%
-  distinct(test) %>%
+sim_results |>
+  distinct(test) |>
   nrow() == 1
 
-sim_results %>%
-  distinct(Q) %>%
+sim_results |>
+  distinct(Q) |>
   nrow() == length(Qs)
 
-sim_results %>%
-  distinct(alt) %>%
+sim_results |>
+  distinct(alt) |>
   nrow() == 3
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   min(na.rm = TRUE) >= 0
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   max(na.rm = TRUE) <= 1
 
-sim_results %>%
+sim_results |>
   filter(
     alt == "two.sided",
     !is.na(CI_LB),
     !is.na(CI_UB)
-  ) %>%
+  ) |>
   summarise(CICheck = all(CI_LB < CI_UB))
 
 # save
-sim_results %>%
+sim_results |>
   saveRDS("results/empirical_quantile_type_one.rds")
 
 rm(list = ls())

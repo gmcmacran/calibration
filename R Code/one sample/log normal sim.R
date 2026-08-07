@@ -37,7 +37,7 @@ for (mu in mus) {
         CI_UBs[i] <- test$conf.int[2]
       }
       temp <- tibble(test = testName, mu = mu, variance = variance, stat = stats, pvalue = pvalues, alt = alts, CI_LB = CI_LBs, CI_UB = CI_UBs)
-      sim_results <- sim_results %>% bind_rows(temp)
+      sim_results <- sim_results |> bind_rows(temp)
       rm(stats, pvalues, alts, testName, temp, i)
     }
 
@@ -59,41 +59,41 @@ for (mu in mus) {
         CI_UBs[i] <- test$conf.int[2]
       }
       temp <- tibble(test = testName, mu = mu, variance = variance, stat = stats, pvalue = pvalues, alt = alts, CI_LB = CI_LBs, CI_UB = CI_UBs)
-      sim_results <- sim_results %>% bind_rows(temp)
+      sim_results <- sim_results |> bind_rows(temp)
       rm(stats, pvalues, alts, testName, temp, i)
     }
   }
 }
 
 # Check structure
-sim_results %>%
-  distinct(test) %>%
+sim_results |>
+  distinct(test) |>
   nrow() == 2
 
-sim_results %>%
-  distinct(mu) %>%
+sim_results |>
+  distinct(mu) |>
   nrow() == length(mus)
 
-sim_results %>%
-  distinct(variance) %>%
+sim_results |>
+  distinct(variance) |>
   nrow() == length(variances)
 
-sim_results %>%
-  distinct(alt) %>%
+sim_results |>
+  distinct(alt) |>
   nrow() == 3
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   min(na.rm = TRUE) >= 0
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   max(na.rm = TRUE) <= 1
 
 all(sim_results$CI_LB < sim_results$CI_UB)
 
 # save
-sim_results %>%
+sim_results |>
   saveRDS("results/log_normal_type_one.rds")
 
 rm(list = ls())

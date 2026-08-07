@@ -31,33 +31,33 @@ for (rate in rates) {
     alts[i] <- test$alternative
   }
   temp <- tibble(test = testName, rate = rate, stat = stats, pvalue = pvalues, alt = alts)
-  sim_results <- sim_results %>% bind_rows(temp)
+  sim_results <- sim_results |> bind_rows(temp)
   rm(stats, pvalues, alts, testName, temp, i, fctr, test, x)
 }
 
 # Check structure
-sim_results %>%
-  distinct(test) %>%
+sim_results |>
+  distinct(test) |>
   nrow() == 1
 
-sim_results %>%
-  distinct(rate) %>%
+sim_results |>
+  distinct(rate) |>
   nrow() == length(rates)
 
-sim_results %>%
-  distinct(alt) %>%
+sim_results |>
+  distinct(alt) |>
   nrow() == 1
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   min(na.rm = TRUE) >= 0
 
-sim_results %>%
-  pull(pvalue) %>%
+sim_results |>
+  pull(pvalue) |>
   max(na.rm = TRUE) <= 1
 
 # save
-sim_results %>%
+sim_results |>
   saveRDS("results/exponential_type_one_one_way.rds")
 
 rm(list = ls())
