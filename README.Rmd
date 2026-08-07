@@ -173,6 +173,10 @@ empLikQuant <- readRDS("results/empirical_quantile_type_one.rds")
 empLikQuant <- empLikQuant %>%
   select(test, alt, param = value, pvalue)
 
+empLikVar <- readRDS("results/empirical_variance_type_one.rds")
+empLikVar <- empLikVar %>%
+  select(test, alt, param = variance, pvalue)
+
 
 typeI <- bind_rows(
   gaussian,
@@ -186,7 +190,8 @@ typeI <- bind_rows(
   cauchy,
   invGauus,
   empLik,
-  empLikQuant
+  empLikQuant,
+  empLikVar
 )
 
 temp <- typeI %>%
@@ -334,6 +339,10 @@ empLikeQuant <- readRDS("results/empirical_quantile_type_one_one_way.rds")
 empLikeQuant <- empLikeQuant %>%
   select(test, alt, param = Q, pvalue)
 
+empLikeVar <- readRDS("results/empirical_variance_type_one_one_way.rds")
+empLikeVar <- empLikeVar %>%
+  select(test, alt, param = variance, pvalue)
+
 
 typeI <- bind_rows(
   gaussian,
@@ -347,7 +356,8 @@ typeI <- bind_rows(
   cauchy,
   invGauus,
   empLike,
-  empLikeQuant
+  empLikeQuant,
+  empLikeVar
 )
 
 temp <- typeI %>%

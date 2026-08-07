@@ -33,7 +33,8 @@ fns <- c(
   "inverse_gaussian_type_one_shape.rds",
   "inverse_gaussian_type_one_dispersion.rds",
   "empirical_mu_type_one.rds",
-  "empirical_quantile_type_one.rds"
+  "empirical_quantile_type_one.rds",
+  "empirical_variance_type_one.rds"
 )
 
 typeI <- map_dfr(fns, load_df)
@@ -47,7 +48,7 @@ typeI %>%
 
 typeI %>%
   distinct(test) %>%
-  nrow() == 22
+  nrow() == 23
 
 typeI %>%
   distinct(alt) %>%
@@ -106,7 +107,8 @@ fns <- c(
   "cauchy_type_one_one_way.rds",
   "inverse_gaussian_type_one_one_way.rds",
   "empirical_mu_type_one_one_way.rds",
-  "empirical_quantile_type_one_one_way.rds"
+  "empirical_quantile_type_one_one_way.rds",
+  "empirical_variance_type_one_one_way.rds"
 )
 
 typeI <- map_dfr(fns, load_df)
@@ -118,7 +120,7 @@ typeI %>%
 
 typeI %>%
   distinct(test) %>%
-  nrow() == 20
+  nrow() == 21
 
 typeI %>%
   distinct(alt) %>%
