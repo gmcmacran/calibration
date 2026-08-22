@@ -49,11 +49,11 @@ for (p in ps) {
       alts <- vector(mode = "character", length = B)
       CI_LBs <- vector(mode = "numeric", length = B)
       CI_UBs <- vector(mode = "numeric", length = B)
-      testName <- "negative_binomial_p_test"
+      testName <- "negative_binomial_prob_test"
       for (i in 1:B) {
         set.seed(i)
         x <- rnbinom(1, size, p)
-        test <- negative_binomial_p_test(x, size, p, alt)
+        test <- negative_binomial_prob_test(x, size, p, alt)
         stats[i] <- test$statistic
         pvalues[i] <- test$p.value
         alts[i] <- test$alternative

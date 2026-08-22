@@ -177,7 +177,10 @@ empLikVar <- readRDS("results/empirical_variance_type_one.rds")
 empLikVar <- empLikVar |>
   select(test, alt, param = variance, pvalue)
 
-
+# Excluding empirical variance and empirical quantile text
+# Both have to throw away samples because optimization problem cannot
+# be solved for some samples. Throwing away some samples makes the
+# sampling process bias.
 typeI <- bind_rows(
   gaussian,
   log_normal,
@@ -189,9 +192,7 @@ typeI <- bind_rows(
   binom,
   cauchy,
   invGauus,
-  empLik,
-  empLikQuant,
-  empLikVar
+  empLik
 )
 
 temp <- typeI |>
@@ -215,7 +216,7 @@ typeI <- typeI |>
 
 Ideally, calibration is good across the entire range of asymptotic p value. What is critical is calibration at .20 and less. Almost no one sets $\alpha$ above .20 when testing.
 
-For all three alternative hypotheses, dots are near the red line for asymptotic p values below .20. Most tests are well calibrated over the entire range of asymptotic p values. The empirical variance test is the one exception. The two sided test has great calibration for small sample sizes. However, calibration is off for the one sided tests.
+For all three alternative hypotheses, dots are near the red line for asymptotic p values below .20. All tests are well calibrated over the entire range of asymptotic p values.
 
 ```{r oneCalibTwo, echo=FALSE, message=FALSE}
 plot_graph <- function(df, alt_arg) {
@@ -379,7 +380,7 @@ typeI <- typeI |>
   ungroup()
 ```
 
-For one way tests, calibration is great for most tests. The empirical quantile test has the worst calibration.
+For one way tests, calibration is great for most tests.
 
 ```{r oneWayCalibTwo, echo=FALSE, message=FALSE}
 plot_graph <- function(df, alt_arg) {
