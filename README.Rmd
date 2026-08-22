@@ -344,7 +344,10 @@ empLikeVar <- readRDS("results/empirical_variance_type_one_one_way.rds")
 empLikeVar <- empLikeVar |>
   select(test, alt, param = variance, pvalue)
 
-
+# Excluding empirical variance and empirical quantile text
+# Both have to throw away samples because optimization problem cannot
+# be solved for some samples. Throwing away some samples makes the
+# sampling process bias.
 typeI <- bind_rows(
   gaussian,
   log_normal,
@@ -356,9 +359,7 @@ typeI <- bind_rows(
   binom,
   cauchy,
   invGauus,
-  empLike,
-  empLikeQuant,
-  empLikeVar
+  empLike
 )
 
 temp <- typeI |>
