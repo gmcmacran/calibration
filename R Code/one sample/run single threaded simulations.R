@@ -12,7 +12,7 @@ library(purrr)
 # Get files to run
 parent_dir <- "R Code/one sample"
 r_files <- list.files(parent_dir)
-for (dist in c("beta", "gamma", "inverse gaussian", "cauchy", "empirical variance", "run")) {
+for (dist in c("beta", "gamma", "inverse gaussian", "cauchy", "run")) {
   r_files <- r_files[!str_detect(r_files, dist)]
 }
 r_files
