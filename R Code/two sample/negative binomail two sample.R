@@ -24,13 +24,13 @@ for (p in ps) {
     stats <- vector(mode = "numeric", length = B)
     pvalues <- vector(mode = "numeric", length = B)
     alts <- vector(mode = "character", length = B)
-    testName <- "negative_binomial_p_one_way_test"
+    testName <- "negative_binomial_prob_one_way_test"
     for (i in 1:B) {
       set.seed(i)
       sizeTemp <- rep(size / 2, 2)
       x <- rnbinom(2, sizeTemp, p)
       fctr <- factor(c(rep("1", length(x) / 2), rep("2", length(x) / 2)), levels = c("1", "2"))
-      test <- negative_binomial_p_one_way_test(x, sizeTemp, fctr)
+      test <- negative_binomial_prob_one_way_test(x, sizeTemp, fctr)
       stats[i] <- test$statistic
       pvalues[i] <- test$p.value
       alts[i] <- test$alternative
